@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Library</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <img
+        class="cover-img"
+        alt="water ripples"
+        src="./media/ameen-fahmy-LaxGR2DKTM4-unsplash.jpeg"
+      />
+      <div class="top-row">
+        <div class="title">My Library</div>
+        <div class="description">
+          Create your own virtual library to keep track of all your favorite
+          books!
+        </div>
+        <form action="#" method="post" id="add-book">
+          <div class="fields">
+            <input
+              name="name"
+              id="name"
+              type="text"
+              placeholder="Name"
+              required
+            />
+            <input
+              name="author"
+              id="author"
+              type="text"
+              placeholder="Author"
+              required
+            />
+
+            <div class="status">
+              <label for="status">Progress:</label>
+              <select name="status" id="status" form="add-book" required>
+                <option value="not-read">Not Started</option>
+                <option value="in-progress">In Progress</option>
+                <option value="Completed">Completed</option>
+                <option value="DNF">DNF</option>
+              </select>
+            </div>
+          </div>
+          <button id="submit-button" type="submit">Add Book</button>
+        </form>
+      </div>
+      <br />
+    </div>
+    <script src="./app.js"></script>
+  </body>
+</html>
