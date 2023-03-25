@@ -23,10 +23,10 @@
         <form action="#" method="post" id="add-book">
           <div class="fields">
             <input
-              name="name"
-              id="name"
+              name="title"
+              id="title"
               type="text"
-              placeholder="Name"
+              placeholder="Title"
               required
             />
             <input
@@ -42,16 +42,30 @@
               <select name="status" id="status" form="add-book" required>
                 <option value="not-read">Not Started</option>
                 <option value="in-progress">In Progress</option>
-                <option value="Completed">Completed</option>
-                <option value="DNF">DNF</option>
+                <option value="completed">Completed</option>
+                <option value="did-not-finish">DNF</option>
               </select>
             </div>
           </div>
-          <button id="submit-button" type="submit">Add Book</button>
+          <button
+            id="submit-button"
+            type="submit"
+            onclick="handleSubmit(event)"
+          >
+            Add Book
+          </button>
         </form>
       </div>
-      <br />
+      <table id="book-list">
+        <tr class="headers">
+          <th>Title</th>
+          <th>Author</th>
+          <th>Status</th>
+          <th></th>
+        </tr>
+      </table>
+      <div class="no-book-warning-div"></div>
     </div>
-    <script src="./app.js"></script>
   </body>
+  <script src="./app.js"></script>
 </html>
