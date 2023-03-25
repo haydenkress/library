@@ -47,12 +47,24 @@
               </select>
             </div>
           </div>
-          <button id="submit-button" type="submit">Add Book</button>
+          <button
+            id="submit-button"
+            type="submit"
+            onclick="handleSubmit(event)"
+          >
+            Add Book
+          </button>
         </form>
       </div>
       <table id="book-list">
-        <tr class="headers"></tr>
+        <tr class="headers">
+          <th>Name</th>
+          <th>Author</th>
+          <th>Status</th>
+          <th></th>
+        </tr>
       </table>
+      <div class="no-book-warning-div"></div>
     </div>
   </body>
   <script src="./app.js"></script>
