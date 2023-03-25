@@ -12,8 +12,8 @@ const bookList = document.getElementById("book-list");
 const form = document.querySelector("form");
 
 // constructor
-function Book(name, author, status) {
-  (this.name = name), (this.author = author), (this.status = status);
+function Book(title, author, status) {
+  (this.title = title), (this.author = author), (this.status = status);
 }
 
 function handleSubmit(event) {
@@ -27,7 +27,7 @@ function handleSubmit(event) {
 }
 
 function createBook() {
-  const title = document.getElementById("name").value;
+  const title = document.getElementById("title").value;
   const author = document.getElementById("author").value;
   const status = document.getElementById("status").value;
 
@@ -40,16 +40,12 @@ function createBook() {
 }
 
 function addBookToLibrary(book) {
-  /*   myLibrary.forEach((book, index) => {
-    if (bookList.contains(book)) {
-      return; // Skip this book if a row already exists
-    }
- */
+  book.index = myLibrary.length - 1;
   const bookRow = document.createElement("tr");
   bookList.appendChild(bookRow);
 
   const titleCell = document.createElement("td");
-  titleCell.textContent = book.name;
+  titleCell.textContent = book.title;
   bookRow.appendChild(titleCell);
 
   // Add the book author to the row
@@ -100,10 +96,12 @@ function addBookToLibrary(book) {
   deleteButton.textContent = "Delete";
   deleteButton.classList.add("delete-button");
   deleteButton.addEventListener("click", () => {
-    // Remove the book from the array
     myLibrary.splice(book.index, 1);
-    // Remove the row from the table
     bookRow.remove();
+    for (let i = book.index; i < myLibrary.length; i++) {
+      myLibrary[i].index--;
+    }
+
     noBookWarning();
   });
   deleteCell.appendChild(deleteButton);
