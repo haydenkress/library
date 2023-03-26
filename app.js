@@ -39,10 +39,8 @@ function createBook() {
   noBookWarning();
 }
 
-function addBookToLibrary(book) {
-  book.index = myLibrary.length - 1;
+function createBookRow(book) {
   const bookRow = document.createElement("tr");
-  bookList.appendChild(bookRow);
 
   const titleCell = document.createElement("td");
   titleCell.textContent = book.title;
@@ -107,8 +105,14 @@ function addBookToLibrary(book) {
   deleteCell.appendChild(deleteButton);
   bookRow.appendChild(deleteCell);
 
-  // Add the new row to the book list
+  return bookRow;
+}
+
+function addBookToLibrary(book) {
+  book.index = myLibrary.length - 1;
+  const bookRow = createBookRow(book);
   bookList.appendChild(bookRow);
+  noBookWarning();
 }
 
 function noBookWarning() {
