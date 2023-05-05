@@ -1,128 +1,145 @@
-// main array
-const myLibrary = [];
+function initializeLibrary() {
+  let library = [];
 
-// no book warning
-const noBooks = document.createElement("div");
-noBooks.classList.add("no-books");
-const noBookWarningSpot = document.querySelector(".no-book-warning-div");
-noBookWarning();
-
-// book table
-const bookList = document.getElementById("book-list");
-const form = document.querySelector("form");
-
-// constructor
-function Book(title, author, status) {
-  (this.title = title), (this.author = author), (this.status = status);
-}
-
-function handleSubmit(event) {
-  event.preventDefault(); // prevent form from submitting
-
-  if (form.checkValidity()) {
-    createBook();
-  } else {
-    form.reportValidity();
-  }
-}
-
-function createBook() {
-  const title = document.getElementById("title").value;
-  const author = document.getElementById("author").value;
-  const status = document.getElementById("status").value;
-
-  const book = new Book(title, author, status);
-
-  myLibrary.push(book);
-  form.reset();
-  addBookToLibrary(book);
-  noBookWarning();
-}
-
-function createBookRow(book) {
-  const bookRow = document.createElement("tr");
-
-  const titleCell = document.createElement("td");
-  titleCell.textContent = book.title;
-  bookRow.appendChild(titleCell);
-
-  // Add the book author to the row
-  const authorCell = document.createElement("td");
-  authorCell.textContent = book.author;
-  bookRow.appendChild(authorCell);
-
-  // Add the book read status to the row
-  const statusCell = document.createElement("td");
-  const statusSelect = document.createElement("select");
-
-  const notRead = document.createElement("option");
-  notRead.value = "not-read";
-  notRead.text = "Not Started";
-  const inProgress = document.createElement("option");
-  inProgress.value = "in-progress";
-  inProgress.text = "In Progress";
-  const completed = document.createElement("option");
-  completed.value = "completed";
-  completed.text = "Completed";
-  const didNotFinish = document.createElement("option");
-  didNotFinish.value = "did-not-finish";
-  didNotFinish.text = "DNF";
-  statusSelect.value = book.status;
-  statusSelect.appendChild(notRead);
-  statusSelect.appendChild(inProgress);
-  statusSelect.appendChild(completed);
-  statusSelect.appendChild(didNotFinish);
-  if (book.status === "not-read") {
-    notRead.selected = true;
-  } else if (book.status === "in-progress") {
-    inProgress.selected = true;
-  } else if (book.status === "completed") {
-    completed.selected = true;
-  } else if (book.status === "did-not-finish") {
-    didNotFinish.selected = true;
+  function createBook(title, author, status) {
+    return { title, author, status };
   }
 
-  statusSelect.addEventListener("change", () => {
-    book.status = statusSelect.value;
-  });
-  statusCell.appendChild(statusSelect);
-  bookRow.appendChild(statusCell);
+  function saveToLocalStorage() {
+    localStorage.setItem("library", JSON.stringify(library));
+  }
 
-  // Add a delete button to the row
-  const deleteCell = document.createElement("td");
-  const deleteButton = document.createElement("button");
-  deleteButton.textContent = "Delete";
-  deleteButton.classList.add("delete-button");
-  deleteButton.addEventListener("click", () => {
-    myLibrary.splice(book.index, 1);
-    bookRow.remove();
-    for (let i = book.index; i < myLibrary.length; i++) {
-      myLibrary[i].index--;
+  function loadFromLocalStorage() {
+    const books = JSON.parse(localStorage.getItem("library"));
+    if (books) {
+      library = books.map((bookData) => {
+        const book = createBook(
+          bookData.title,
+          bookData.author,
+          bookData.status
+        );
+        return book;
+      });
+    } else {
+      library = [];
     }
+    return library;
+  }
 
+  function loadProjects() {
+    const books = loadFromLocalStorage();
     noBookWarning();
-  });
-  deleteCell.appendChild(deleteButton);
-  bookRow.appendChild(deleteCell);
 
-  return bookRow;
-}
+    books.forEach((book) => {
+      addBookToDOM(book);
+    });
+  }
 
-function addBookToLibrary(book) {
-  book.index = myLibrary.length - 1;
-  const bookRow = createBookRow(book);
-  bookList.appendChild(bookRow);
-  noBookWarning();
-}
+  function handleSubmit(event) {
+    const form = document.querySelector("form");
+    event.preventDefault(); // prevent form from submitting
 
-function noBookWarning() {
-  if (myLibrary.length === 0) {
-    noBooks.textContent =
-      "You haven't added any books yet. Add books by entering the details above.";
-    noBookWarningSpot.appendChild(noBooks);
-  } else {
-    if (noBookWarningSpot.contains(noBooks)) {
-      noBookWarningSpot.removeChild(noBooks);
+    if (form.checkValidity()) {
+      const book = generateBook();
+      addBookToDOM(book);
+      noBookWarning();
+      form.reset();
+    } else {
+      form.reportValidity();
     }
   }
+
+  function generateBook() {
+    const title = document.getElementById("title").value;
+    const author = document.getElementById("author").value;
+    const status = document.getElementById("status").value;
+
+    const book = createBook(title, author, status);
+    library.push(book);
+    saveToLocalStorage();
+    return book;
+  }
+
+  function deleteBook(bookName) {
+    const bookToDelete = library.find((book) => book === bookName);
+    library.splice(library.indexOf(bookToDelete), 1);
+    saveToLocalStorage();
+  }
+
+  function addBookToDOM(book) {
+    const bookList = document.getElementById("book-list");
+    const bookRow = document.createElement("div");
+    bookRow.classList.add("book-row");
+
+    const titleCell = document.createElement("div");
+    titleCell.textContent = book.title;
+    bookRow.appendChild(titleCell);
+
+    const authorCell = document.createElement("div");
+    authorCell.textContent = book.author;
+    bookRow.appendChild(authorCell);
+
+    const statusCell = document.createElement("div");
+    const statusSelect = document.createElement("select");
+
+    const notRead = document.createElement("option");
+    notRead.value = "not-read";
+    notRead.text = "Not Started";
+    const inProgress = document.createElement("option");
+    inProgress.value = "in-progress";
+    inProgress.text = "In Progress";
+    const completed = document.createElement("option");
+    completed.value = "completed";
+    completed.text = "Completed";
+    const didNotFinish = document.createElement("option");
+    didNotFinish.value = "did-not-finish";
+    didNotFinish.text = "DNF";
+
+    statusSelect.appendChild(notRead);
+    statusSelect.appendChild(inProgress);
+    statusSelect.appendChild(completed);
+    statusSelect.appendChild(didNotFinish);
+
+    statusSelect.value = book.status;
+
+    statusCell.appendChild(statusSelect);
+    bookRow.appendChild(statusCell);
+
+    statusSelect.addEventListener("change", () => {
+      book.status = statusSelect.value;
+      saveToLocalStorage();
+    });
+
+    const deleteButton = document.createElement("button");
+    deleteButton.textContent = "Delete";
+    deleteButton.classList.add("delete-button");
+    deleteButton.addEventListener("click", () => {
+      deleteBook(book);
+      bookRow.remove();
+      saveToLocalStorage();
+      noBookWarning();
+    });
+    bookRow.append(deleteButton);
+
+    bookList.append(bookRow);
+  }
+
+  function noBookWarning() {
+    const noBooks = document.querySelector(".no-book-warning-div");
+    if (library.length !== 0) {
+      noBooks.textContent = "";
+    } else {
+      noBooks.textContent =
+        "You haven't added any books yet. Add books by entering the details above.";
+    }
+  }
+
+  window.addEventListener("load", () => {
+    loadProjects();
+    const submitBtn = document.getElementById("submit-button");
+
+    submitBtn.addEventListener("click", handleSubmit);
+  });
 }
+
+initializeLibrary();

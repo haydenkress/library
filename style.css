@@ -137,23 +137,21 @@ select option {
   background-color: beige;
 }
 
-table {
+#book-list {
   margin-top: 70px;
   width: 80%;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: 50px;
+  grid-auto-rows: 50px;
 }
 
-tbody {
-  border-bottom: #333333;
-}
-
-th {
-  width: 25%;
-  text-align: left;
-}
-
-tr {
-  height: 60px;
-  font-size: 16px;
+.book-row {
+  display: inline-grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-column: 1/-1;
+  justify-content: center;
+  align-items: center;
 }
 
 .headers {
@@ -170,5 +168,6 @@ tr {
   border-radius: 6px;
   font-size: 14px;
   border: none;
-  vertical-align: middle;
+  justify-self: flex-start;
+  display: block;
 }
